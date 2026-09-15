@@ -1,0 +1,173 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Sidebar from "@/components/Sidebar";
+import TopBar from "@/components/TopBar";
+import AppCard from "@/components/AppCard";
+import InstallPanel from "@/components/InstallPanel";
+import { bridge } from "@/lib/bridge";
+
+const ALL = "All Apps";
+
+const EMPTY_PROGRESS = { index: 0, total: 0, percent: 0, message: "" };
+
+export default function App() {
+  const [apps, setApps] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState(ALL);
+  const [selected, setSelected] = useState(new Set());
+  const [statuses, setStatuses] = useState({});
+  const [phase, setPhase] = useState("idle");
+  const [progress, setProgress] = useState(EMPTY_PROGRESS);
+  const [results, setResults] = useState([]);
+
+  const loadApps = useCallback(async () => {
+    let list = [];
+    try {
+      list = await bridge.getSoftwareList();
+    } finally {
+      setApps(Array.isArray(list) ? list : []);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(loadApps, 0);
+    return () => clearTimeout(timer);
+  }, [loadApps]);
+
+  useEffect(() => {
+    const offProgress = bridge.onProgress((payload) => {
+      setProgress(payload);
+      setStatuses((prev) => ({
+        ...prev,
+        [payload.id]: payload.phase === "done" ? prev[payload.id] : payload.phase,
+      }));
+    });
+
+    const offDone = bridge.onItemDone((item) => {
+      setStatuses((prev) => ({ ...prev, [item.id]: item.status }));
+    });
+
+    const offComplete = bridge.onComplete((list) => {
+      setPhase("done");
+      setResults(list);
+      setProgress(EMPTY_PROGRESS);
+    });
+
+    return () => {
+      offProgress();
+      offDone();
+      offComplete();
+    };
+  }, []);
+
+  const categories = useMemo(() => {
+    const counts = new Map();
+    for (const app of apps) {
+      counts.set(app.category, (counts.get(app.category) ?? 0) + 1);
+    }
+    return [
+      { name: ALL, count: apps.length },
+      ...Array.from(counts, ([name, count]) => ({ name, count })).sort((a, b) =>
+        a.name.localeCompare(b.name),
+      ),
+    ];
+  }, [apps]);
+
+  const visibleApps = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    return apps.filter((app) => {
+      const inCategory = activeCategory === ALL || app.category === activeCategory;
+      if (!inCategory) return false;
+      if (!term) return true;
+      return `${app.name} ${app.publisher} ${app.description}`.toLowerCase().includes(term);
+    });
+  }, [apps, activeCategory, query]);
+
+  const toggleApp = (id) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const startInstall = async () => {
+    const list = apps.filter((app) => selected.has(app.id));
+    if (list.length === 0) return;
+
+    setResults([]);
+    setProgress({ ...EMPTY_PROGRESS, total: list.length });
+    setPhase("running");
+
+    await bridge.install(list);
+  };
+
+  const cancel = () => {
+    bridge.cancel();
+  };
+
+  const reset = () => {
+    setPhase("idle");
+    setResults([]);
+    setStatuses({});
+    setSelected(new Set());
+  };
+
+  const installedCount = apps.filter((app) => app.installed).length;
+  const running = phase === "running";
+
+  return (
+    <div className="flex h-full">
+      <Sidebar
+        categories={categories}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+        selectedCount={selected.size}
+      />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar
+          query={query}
+          onQueryChange={setQuery}
+          onRefresh={loadApps}
+          loading={loading}
+          total={apps.length}
+          installedCount={installedCount}
+        />
+
+        <main className="flex-1 overflow-y-auto p-6">
+          {loading ? (
+            <p className="text-sm text-slate-500">Scanning catalogue...</p>
+          ) : visibleApps.length === 0 ? (
+            <p className="text-sm text-slate-500">No applications match this view.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {visibleApps.map((app) => (
+                <AppCard
+                  key={app.id}
+                  app={app}
+                  selected={selected.has(app.id)}
+                  status={statuses[app.id]}
+                  onToggle={toggleApp}
+                  disabled={running && statuses[app.id] !== undefined}
+                />
+              ))}
+            </div>
+          )}
+        </main>
+
+        <InstallPanel
+          phase={phase}
+          selectedCount={selected.size}
+          progress={progress}
+          results={results}
+          onInstall={startInstall}
+          onCancel={cancel}
+          onReset={reset}
+        />
+      </div>
+    </div>
+  );
+}

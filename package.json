@@ -1,0 +1,66 @@
+{
+  "name": "ultimateinstaller",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Ultimate Windows Software Installer - select apps and install them silently in the background",
+  "main": "electron/main.cjs",
+  "author": "Mike Rembo",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n VITE,ELECTRON \"vite\" \"wait-on tcp:127.0.0.1:5173 && cross-env NODE_ENV=development electron .\"",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "dist": "vite build && electron-builder",
+    "pack": "vite build && electron-builder --dir"
+  },
+  "dependencies": {
+    "electron-store": "^11.0.2",
+    "lucide-react": "^1.30.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "autoprefixer": "^10.5.4",
+    "concurrently": "^10.0.4",
+    "cross-env": "^10.1.0",
+    "electron": "^43.3.0",
+    "electron-builder": "^26.15.3",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.2.1",
+    "wait-on": "^9.1.0"
+  },
+  "build": {
+    "appId": "com.ultimate.installer",
+    "productName": "Ultimate Installer",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true
+    }
+  }
+}
