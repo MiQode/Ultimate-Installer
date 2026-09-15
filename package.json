@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n VITE,ELECTRON \"vite\" \"wait-on tcp:127.0.0.1:5173 && cross-env NODE_ENV=development electron .\"",
-    "start": "vite",
+    "start": "npm run build && electron .",
+    "web": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -52,7 +53,21 @@
       "electron/**/*",
       "package.json"
     ],
+    "extraResources": [
+      {
+        "from": "public/icons/app-icon.ico",
+        "to": "app-icon.ico"
+      },
+      {
+        "from": "installers",
+        "to": "installers",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "win": {
+      "icon": "public/icons/app-icon.ico",
       "target": [
         "nsis"
       ]

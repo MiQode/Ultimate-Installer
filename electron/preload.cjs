@@ -4,6 +4,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("installer", {
   getSoftwareList: () => ipcRenderer.invoke("software:list"),
+  getOfflineStatus: () => ipcRenderer.invoke("software:offline-status"),
   install: (apps) => ipcRenderer.invoke("software:install", apps),
   cancel: () => ipcRenderer.invoke("software:cancel"),
   hasWinget: () => ipcRenderer.invoke("software:winget-available"),

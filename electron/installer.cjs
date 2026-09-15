@@ -9,17 +9,91 @@ const http = require("node:http");
 const { spawn, execFile } = require("node:child_process");
 
 const DOWNLOAD_DIR = path.join(os.tmpdir(), "ultimate-installer");
+const INSTALLER_EXTENSIONS = [".exe", ".msi", ".bat", ".cmd", ".ps1"];
 
 /**
  * Thin wrapper around the actual install work so the main process can drive it
  * and forward progress to the renderer.
+ *
+ * Install preference per app:
+ *   1. local file in the offline `installers/` repository
+ *   2. direct vendor download (`url`)
+ *   3. winget (`wingetId`)
  */
 class Installer {
-  constructor() {
+  /**
+   * @param {string} localRepo path to the offline installers directory
+   */
+  constructor(localRepo = null) {
     this.activeChildren = new Set();
     this.activeDownloads = new Set();
     this.cancelled = false;
     this.installedCache = null;
+    this.localRepo = localRepo;
+    this.localFiles = null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Offline repository
+  // ---------------------------------------------------------------------------
+
+  setLocalRepo(dir) {
+    this.localRepo = dir;
+    this.localFiles = null;
+  }
+
+  /**
+   * Indexes the offline repository once, mapping lower-cased file name ->
+   * absolute path. Missing directory simply yields an empty index.
+   */
+  getLocalFiles(force = false) {
+    if (this.localFiles && !force) return this.localFiles;
+
+    const index = new Map();
+    if (this.localRepo && fs.existsSync(this.localRepo)) {
+      const walk = (dir) => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            walk(full);
+            continue;
+          }
+          if (INSTALLER_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
+            index.set(entry.name.toLowerCase(), full);
+          }
+        }
+      };
+      walk(this.localRepo);
+    }
+
+    this.localFiles = index;
+    return index;
+  }
+
+  /**
+   * Resolves the offline file for an app. `localFile` may be an exact name or a
+   * partial name; otherwise we match on the app id as a fallback.
+   */
+  resolveLocalFile(app) {
+    const files = this.getLocalFiles();
+    if (files.size === 0) return null;
+
+    const candidates = [app.localFile, app.id, app.name]
+      .filter(Boolean)
+      .map((value) => String(value).toLowerCase());
+
+    for (const candidate of candidates) {
+      if (files.has(candidate)) return files.get(candidate);
+    }
+
+    for (const candidate of candidates) {
+      const slug = candidate.replace(/[^a-z0-9]/g, "");
+      for (const [name, full] of files) {
+        if (name.replace(/[^a-z0-9]/g, "").includes(slug)) return full;
+      }
+    }
+
+    return null;
   }
 
   // ---------------------------------------------------------------------------
@@ -95,6 +169,11 @@ class Installer {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
 
+    const localFile = this.resolveLocalFile(app);
+    if (localFile) {
+      return this.installLocal(app, localFile, report);
+    }
+
     if (app.url) {
       try {
         return await this.installFromUrl(app, report);
@@ -102,11 +181,61 @@ class Installer {
         if (this.cancelled) {
           return { id: app.id, name: app.name, status: "cancelled" };
         }
-        report({ phase: "fallback", message: `Direct download failed: ${error.message}` });
+        report({
+          phase: "fallback",
+          message: `Direct download failed: ${error.message}`,
+        });
       }
     }
 
     return this.installWithWinget(app, report);
+  }
+
+  /**
+   * Runs an installer that ships with the application (offline mode). A rebase
+   * of the argument list supports `{file}` placeholders for scripts.
+   */
+  async installLocal(app, localFile, report) {
+    report({
+      phase: "installing",
+      percent: 100,
+      message: `Installing ${app.name} from bundled installer...`,
+    });
+
+    const ext = path.extname(localFile).toLowerCase();
+    const args = (app.silentArgs || []).map((arg) =>
+      String(arg).replace("{file}", localFile),
+    );
+
+    let code;
+    if (ext === ".msi") {
+      code = await this.runCommand("msiexec", ["/i", localFile, ...args]);
+    } else if (ext === ".bat" || ext === ".cmd") {
+      code = await this.runCommand("cmd.exe", ["/c", localFile, ...args]);
+    } else if (ext === ".ps1") {
+      code = await this.runCommand("powershell.exe", [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        localFile,
+        ...args,
+      ]);
+    } else {
+      code = await this.runInstaller(localFile, args);
+    }
+
+    if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
+    if (code === 0 || code === 3010) {
+      return {
+        id: app.id,
+        name: app.name,
+        status: "installed",
+        source: "offline",
+        rebootRequired: code === 3010,
+      };
+    }
+    throw new Error(`Installer exited with code ${code}`);
   }
 
   async installFromUrl(app, report) {
@@ -135,6 +264,7 @@ class Installer {
         id: app.id,
         name: app.name,
         status: "installed",
+        source: "download",
         rebootRequired: code === 3010,
       };
     }
@@ -170,7 +300,9 @@ class Installer {
     );
 
     if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
-    if (code === 0) return { id: app.id, name: app.name, status: "installed" };
+    if (code === 0) {
+      return { id: app.id, name: app.name, status: "installed", source: "winget" };
+    }
     if (code === -1978335189) {
       return { id: app.id, name: app.name, status: "already-installed" };
     }
@@ -280,6 +412,17 @@ class Installer {
   reset() {
     this.cancelled = false;
     this.installedCache = null;
+  }
+
+  /**
+   * Describes how an app would be installed right now, so the UI can show an
+   * Offline / Download / winget badge.
+   */
+  resolveSource(app) {
+    if (this.resolveLocalFile(app)) return "offline";
+    if (app.url) return "download";
+    if (app.wingetId) return "winget";
+    return "unavailable";
   }
 }
 

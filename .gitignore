@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Offline installer payload - too large to version, keep the folder + README
+installers/*
+!installers/.gitkeep
+!installers/README.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

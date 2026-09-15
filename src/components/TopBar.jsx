@@ -1,4 +1,4 @@
-import { Search, RefreshCw, SlidersHorizontal } from "lucide-react";
+import { Search, RefreshCw, HardDrive } from "lucide-react";
 
 export default function TopBar({
   query,
@@ -7,6 +7,7 @@ export default function TopBar({
   loading,
   total,
   installedCount,
+  offline,
 }) {
   return (
     <header className="flex items-center gap-4 border-b border-slate-800 bg-slate-900/60 px-6 py-4">
@@ -16,6 +17,20 @@ export default function TopBar({
         </h1>
         <p className="text-xs text-slate-500">{installedCount} already installed</p>
       </div>
+
+      <span
+        className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs ${
+          offline?.count > 0
+            ? "bg-indigo-500/15 text-indigo-300"
+            : "bg-slate-800 text-slate-500"
+        }`}
+        title={offline?.directory || "Offline installer repository"}
+      >
+        <HardDrive className="h-3.5 w-3.5" />
+        {offline?.count > 0
+          ? `Offline repo: ${offline.count} file${offline.count === 1 ? "" : "s"}`
+          : "Offline repo empty"}
+      </span>
 
       <div className="ml-auto flex items-center gap-3">
         <div className="relative">
@@ -27,14 +42,6 @@ export default function TopBar({
             className="w-64 rounded-lg border border-slate-700 bg-slate-950/60 py-2 pl-9 pr-3 text-sm text-slate-200 outline-none transition-colors placeholder:text-slate-600 focus:border-sky-500"
           />
         </div>
-
-        <button
-          type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800"
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          Filters
-        </button>
 
         <button
           type="button"

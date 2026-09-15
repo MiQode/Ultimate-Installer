@@ -1,0 +1,2 @@
+# Keeps the offline installer repository in version control.
+# Setup files dropped here are intentionally NOT committed (see .gitignore).

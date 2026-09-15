@@ -19,13 +19,19 @@ export default function App() {
   const [phase, setPhase] = useState("idle");
   const [progress, setProgress] = useState(EMPTY_PROGRESS);
   const [results, setResults] = useState([]);
+  const [offline, setOffline] = useState({ count: 0, directory: "" });
 
   const loadApps = useCallback(async () => {
     let list = [];
+    let offlineStatus = { count: 0, directory: "" };
     try {
-      list = await bridge.getSoftwareList();
+      [list, offlineStatus] = await Promise.all([
+        bridge.getSoftwareList(),
+        bridge.getOfflineStatus(),
+      ]);
     } finally {
       setApps(Array.isArray(list) ? list : []);
+      setOffline(offlineStatus ?? { count: 0, directory: "" });
       setLoading(false);
     }
   }, []);
@@ -135,6 +141,7 @@ export default function App() {
           loading={loading}
           total={apps.length}
           installedCount={installedCount}
+          offline={offline}
         />
 
         <main className="flex-1 overflow-y-auto p-6">

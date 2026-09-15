@@ -6,7 +6,17 @@ const fs = require("node:fs");
 const { Installer } = require("./installer.cjs");
 
 const isDev = process.env.NODE_ENV === "development";
-const installer = new Installer();
+
+/**
+ * The offline repository. In a packaged build electron-builder copies
+ * `installers/` to `resources/installers`; in development we read it from the
+ * project root.
+ */
+const OFFLINE_DIR = app.isPackaged
+  ? path.join(process.resourcesPath, "installers")
+  : path.join(__dirname, "..", "installers");
+
+const installer = new Installer(OFFLINE_DIR);
 
 let mainWindow = null;
 
@@ -20,6 +30,14 @@ function loadCatalogue() {
   }
 }
 
+function resolveIcon() {
+  const candidates = [
+    path.join(__dirname, "..", "public", "icons", "app-icon.ico"),
+    path.join(process.resourcesPath ?? "", "app-icon.ico"),
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate));
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,
@@ -29,6 +47,7 @@ function createWindow() {
     show: false,
     backgroundColor: "#0f172a",
     title: "Ultimate Installer",
+    icon: resolveIcon(),
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       contextIsolation: true,
@@ -63,7 +82,18 @@ function registerIpc() {
     return catalogue.map((item) => ({
       ...item,
       installed: installer.isInstalled(item, installed),
+      source: installer.resolveSource(item),
     }));
+  });
+
+  ipcMain.handle("software:offline-status", () => {
+    const files = installer.getLocalFiles(true);
+    return {
+      directory: OFFLINE_DIR,
+      exists: fs.existsSync(OFFLINE_DIR),
+      count: files.size,
+      files: Array.from(files.keys()),
+    };
   });
 
   ipcMain.handle("software:install", async (event, apps) => {
@@ -83,7 +113,11 @@ function registerIpc() {
         });
 
       try {
-        send({ phase: "queued", percent: 0, message: `Preparing ${item.name}...` });
+        send({
+          phase: "queued",
+          percent: 0,
+          message: `Preparing ${item.name}...`,
+        });
         const result = await installer.installApp(item, send);
         results.push(result);
       } catch (error) {

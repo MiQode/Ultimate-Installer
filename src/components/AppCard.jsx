@@ -1,4 +1,5 @@
-import { Check, Clock, Loader2, AlertTriangle } from "lucide-react";
+import { Check, Clock, Loader2, AlertTriangle, HardDrive } from "lucide-react";
+import { sourceLabels } from "@/lib/bridge";
 
 const badgeFor = (status) => {
   switch (status) {
@@ -83,8 +84,27 @@ export default function AppCard({ app, selected, status, onToggle, disabled }) {
 
       <p className="mt-3 line-clamp-2 text-xs text-slate-400">{app.description}</p>
 
-      <div className="mt-4 flex items-center justify-between">
-        <span className="text-xs text-slate-500">{app.size}</span>
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="text-xs text-slate-500">{app.size}</span>
+          {sourceLabels[app.source] && (
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wide ${sourceLabels[app.source].className}`}
+              title={
+                app.source === "offline"
+                  ? "Installs from the bundled offline repository"
+                  : app.source === "download"
+                    ? "Downloads from the vendor"
+                    : app.source === "winget"
+                      ? "Installs via Windows Package Manager"
+                      : "No installation source available"
+              }
+            >
+              {app.source === "offline" && <HardDrive className="h-2.5 w-2.5" />}
+              {sourceLabels[app.source].label}
+            </span>
+          )}
+        </div>
         {badge ? (
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${badge.className}`}
