@@ -192,8 +192,11 @@ class Installer {
   }
 
   /**
-   * Runs an installer that ships with the application (offline mode). A rebase
-   * of the argument list supports `{file}` placeholders for scripts.
+   * Runs an installer that ships with the application (offline mode).
+   *
+   * Script types (.bat/.cmd/.ps1) are the escape hatch for installers that
+   * expose preference checkboxes or bundled offers: point `localFile` at a
+   * wrapper script that automates those choices, and it runs here silently.
    */
   async installLocal(app, localFile, report) {
     report({
@@ -209,12 +212,13 @@ class Installer {
 
     let code;
     if (ext === ".msi") {
-      code = await this.runCommand("msiexec", ["/i", localFile, ...args]);
+      code = await this.runMsi(localFile, args);
     } else if (ext === ".bat" || ext === ".cmd") {
       code = await this.runCommand("cmd.exe", ["/c", localFile, ...args]);
     } else if (ext === ".ps1") {
       code = await this.runCommand("powershell.exe", [
         "-NoProfile",
+        "-NonInteractive",
         "-ExecutionPolicy",
         "Bypass",
         "-File",
@@ -224,6 +228,8 @@ class Installer {
     } else {
       code = await this.runInstaller(localFile, args);
     }
+
+    await this.closeAutoLaunched(app);
 
     if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
     if (code === 0 || code === 3010) {
@@ -236,6 +242,50 @@ class Installer {
       };
     }
     throw new Error(`Installer exited with code ${code}`);
+  }
+
+  /**
+   * Always-quiet MSI invocation. Adds `/qn` (no UI) and suppresses reboots
+   * unless the catalogue entry overrides them, so no wizard or restart dialog
+   * can interrupt the run.
+   */
+  runMsi(msiPath, extraArgs = []) {
+    const args = ["/i", msiPath];
+    const lowered = extraArgs.map((a) => a.toLowerCase());
+
+    if (!lowered.includes("/qn") && !lowered.includes("/quiet") && !lowered.includes("/passive")) {
+      args.push("/qn");
+    }
+    if (!lowered.some((a) => a.startsWith("/norestart") || a.includes("reboot="))) {
+      args.push("/norestart", "REBOOT=ReallySuppress");
+    }
+
+    args.push(...extraArgs);
+    return this.runCommand("msiexec", args);
+  }
+
+  /**
+   * Terminates applications that some installers auto-open once finished, so
+   * the user is not interrupted. Apps opt in via `killAfter: ["chrome"]`.
+   */
+  async closeAutoLaunched(app) {
+    if (this.cancelled) return;
+    const names = (app.killAfter || []).filter(Boolean);
+    if (names.length === 0) return;
+
+    await Promise.all(
+      names.map(
+        (name) =>
+          new Promise((resolve) => {
+            execFile(
+              "taskkill",
+              ["/IM", name, "/F", "/T"],
+              { windowsHide: true, timeout: 8000 },
+              () => resolve(),
+            );
+          }),
+      ),
+    );
   }
 
   async installFromUrl(app, report) {
@@ -254,8 +304,13 @@ class Installer {
     if (this.cancelled) throw new Error("Cancelled");
 
     report({ phase: "installing", percent: 100, message: `Installing ${app.name}...` });
-    const code = await this.runInstaller(destination, app.silentArgs || []);
+    const ext = path.extname(destination).toLowerCase();
+    const code =
+      ext === ".msi"
+        ? await this.runMsi(destination, app.silentArgs || [])
+        : await this.runInstaller(destination, app.silentArgs || []);
 
+    await this.closeAutoLaunched(app);
     await fsp.rm(destination, { force: true }).catch(() => {});
 
     if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
@@ -298,6 +353,8 @@ class Installer {
     const code = await this.runCommand("winget", args, (line) =>
       report({ phase: "installing", percent: 100, message: line.trim() || app.name }),
     );
+
+    await this.closeAutoLaunched(app);
 
     if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
     if (code === 0) {

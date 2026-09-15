@@ -154,13 +154,102 @@ You may provide any combination; the engine picks the best available source.
 
 ---
 
-## Build
+## Administrator rights (UAC)
+
+You cannot programmatically dismiss a UAC prompt — that is a Windows security
+boundary. The app works around this by elevating **once at startup**. When the
+electron-builder package includes `requestedExecutionLevel: "requireAdministrator"`
+in its manifest, Windows shows exactly one UAC prompt when the user opens the
+app, and every installer launched afterwards inherits that admin token silently.
+
+In development (`npm run dev`), the manifest is not applied to the Electron binary,
+so a second approach is used: the app detects it is not elevated and relaunches
+itself via `Start-Process -Verb RunAs`, which raises one UAC dialog. If the user
+declines, the app continues unelevated and individual installers may prompt.
+
+The header shows an **Admin / Standard** badge so the user knows whether all
+installs will run without further prompts.
+
+> To skip the elevation dialog in development, set the environment variable
+> `ULTIMATE_NO_ELEVATE=1`.
+
+## Silent installs, checkbox bypass and preventing auto-launch
+
+Every app in the catalogue has a `silentArgs` array. These are the switches that
+bypass the setup wizard, pre-select all options, and suppress any "launch now"
+checkboxes. For example:
+
+| Installer type  | Flags                                        |
+| --------------- | -------------------------------------------- |
+| NSIS            | `/S`                                         |
+| Inno Setup      | `/VERYSILENT /NORESTART /SUPPRESSMSGBOXES`   |
+| MSI             | `/qn /norestart REBOOT=ReallySuppress`       |
+| InstallShield   | `/s /v"/qn"`                                 |
+| winget          | `--silent --disable-interactivity`           |
+
+MSI installers are automatically wrapped with `/qn` and reboot suppression if
+the catalogue entry omits them, so no wizard can appear.
+
+Some installers auto-open their app once finished. The engine combats this with
+a `killAfter` field — a list of process names to terminate immediately after
+each install completes (via `taskkill /F /T`). Browsers, editors, chat apps
+and other GUI installers are all covered.
+
+For installers that expose bundled offers through checkboxes or tabs that silent
+switches cannot suppress, the offline repository supports `.bat`, `.cmd` and
+`.ps1` wrapper scripts. These run in a hidden console and can automate any
+choice — drop a wrapper script into `installers/` and set `localFile` to the
+script name.
+
+## Building into a standalone distributable
+
+The final product is a single `.exe` installer (NSIS) that can be distributed
+to other machines, just like any standard Windows application.
 
 ```powershell
-npm run build        # renderer -> dist/
-npm run pack         # unpacked app in release/win-unpacked
-npm run dist         # NSIS installer in release/
+# Full pipeline: build the UI, package the Electron app, produce the installer
+npm run dist
 ```
+
+Output:
+
+```
+release/
+  Ultimate Installer Setup 1.0.0.exe    ← the distributable installer
+  win-unpacked/                          ← unpacked portable version
+```
+
+The `.exe` installer:
+
+- Requires no Node.js or npm on the target machine.
+- Installs the app to `Program Files\Ultimate Installer` (or a user-chosen path).
+- Creates a desktop and Start Menu shortcut.
+- Bundles the offline installer repository if present in `installers/`.
+- Triggers one UAC prompt on launch (the app is marked `requireAdministrator`).
+
+To test the packaged app locally without creating the full installer:
+
+```powershell
+npm run pack    # unpacked build in release/win-unpacked/Ultimate Installer.exe
+```
+
+To test the installer itself:
+
+```powershell
+npm run dist    # produces release/Ultimate Installer Setup 1.0.0.exe
+# Run that .exe on any Windows 10/11 machine.
+```
+
+### Building with offline installers included
+
+1. Drop setup files into `installers/` (see "How to add an installer" above).
+2. Run `npm run dist`.
+3. The resulting `.exe` contains the offline payload in `resources/installers`.
+
+> The `installers/` folder is gitignored. It must be populated before every
+> offline build, or kept on a build server / USB drive.
+
+## Project layout
 
 ## Project layout
 
@@ -180,7 +269,14 @@ index.html           Vite entry
 
 ## Requirements
 
+### To build and develop
+
 - Windows 10/11 (x64)
 - Node.js 20+
-- Administrator rights for machine-wide installers (UAC will prompt)
-- Internet only if you rely on `download` or `winget` sources
+- npm
+
+### To distribute
+
+- The output is a standalone `.exe` — target machines need Windows 10/11 only.
+- Administrator rights for machine-wide installers (one UAC prompt on app launch).
+- Internet only if you rely on `download` or `winget` sources.

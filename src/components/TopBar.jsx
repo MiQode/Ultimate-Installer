@@ -1,4 +1,4 @@
-import { Search, RefreshCw, HardDrive } from "lucide-react";
+import { Search, RefreshCw, HardDrive, Shield, ShieldAlert } from "lucide-react";
 
 export default function TopBar({
   query,
@@ -8,6 +8,7 @@ export default function TopBar({
   total,
   installedCount,
   offline,
+  elevated,
 }) {
   return (
     <header className="flex items-center gap-4 border-b border-slate-800 bg-slate-900/60 px-6 py-4">
@@ -17,6 +18,22 @@ export default function TopBar({
         </h1>
         <p className="text-xs text-slate-500">{installedCount} already installed</p>
       </div>
+
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${
+          elevated
+            ? "bg-emerald-500/15 text-emerald-300"
+            : "bg-amber-500/15 text-amber-300"
+        }`}
+        title={
+          elevated
+            ? "Running as administrator — installers will not prompt UAC"
+            : "Not elevated — some installers may prompt for admin rights"
+        }
+      >
+        {elevated ? <Shield className="h-3 w-3" /> : <ShieldAlert className="h-3 w-3" />}
+        {elevated ? "Admin" : "Standard"}
+      </span>
 
       <span
         className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs ${

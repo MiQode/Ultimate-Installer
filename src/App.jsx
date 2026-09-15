@@ -20,18 +20,25 @@ export default function App() {
   const [progress, setProgress] = useState(EMPTY_PROGRESS);
   const [results, setResults] = useState([]);
   const [offline, setOffline] = useState({ count: 0, directory: "" });
+  const [elevated, setElevated] = useState(false);
 
   const loadApps = useCallback(async () => {
     let list = [];
     let offlineStatus = { count: 0, directory: "" };
+    let elev = false;
     try {
-      [list, offlineStatus] = await Promise.all([
+      const [l, o, e] = await Promise.allSettled([
         bridge.getSoftwareList(),
         bridge.getOfflineStatus(),
+        bridge.isElevated(),
       ]);
+      list = l.status === "fulfilled" ? l.value : [];
+      offlineStatus = o.status === "fulfilled" ? o.value : { count: 0, directory: "" };
+      elev = e.status === "fulfilled" ? e.value : false;
     } finally {
       setApps(Array.isArray(list) ? list : []);
       setOffline(offlineStatus ?? { count: 0, directory: "" });
+      setElevated(Boolean(elev));
       setLoading(false);
     }
   }, []);
@@ -58,6 +65,14 @@ export default function App() {
       setPhase("done");
       setResults(list);
       setProgress(EMPTY_PROGRESS);
+      setSelected(new Set());
+      setStatuses((prev) => {
+        const next = { ...prev };
+        for (const item of list) {
+          next[item.id] = item.status;
+        }
+        return next;
+      });
     });
 
     return () => {
@@ -142,6 +157,7 @@ export default function App() {
           total={apps.length}
           installedCount={installedCount}
           offline={offline}
+          elevated={elevated}
         />
 
         <main className="flex-1 overflow-y-auto p-6">

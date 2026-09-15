@@ -5,16 +5,22 @@
     "publisher": "Google LLC",
     "category": "Browsers",
     "description": "Fast, secure browser built by Google.",
-    "icon": "\uD83C\uDF10",
+    "icon": "🌐",
     "size": "~110 MB",
     "url": "https://dl.google.com/chrome/install/standalonesetup64.exe",
     "silentArgs": [
       "/silent",
-      "/install"
+      "/install",
+      "--do-not-launch-chrome",
+      "--no-default-browser-check",
+      "--no-first-run"
     ],
     "wingetId": "Google.Chrome",
     "detect": [
       "Google Chrome"
+    ],
+    "killAfter": [
+      "chrome.exe"
     ]
   },
   {
@@ -23,15 +29,19 @@
     "publisher": "Mozilla",
     "category": "Browsers",
     "description": "Independent, privacy-focused browser.",
-    "icon": "\uD83E\uDD8A",
+    "icon": "🦊",
     "size": "~60 MB",
     "url": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US",
     "silentArgs": [
-      "/S"
+      "/S",
+      "/noreboot"
     ],
     "wingetId": "Mozilla.Firefox",
     "detect": [
       "Mozilla Firefox"
+    ],
+    "killAfter": [
+      "firefox.exe"
     ]
   },
   {
@@ -40,13 +50,16 @@
     "publisher": "Brave Software",
     "category": "Browsers",
     "description": "Chromium browser with built-in ad blocking.",
-    "icon": "\uD83E\uDD81",
+    "icon": "🦁",
     "size": "~150 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Brave.Brave",
     "detect": [
       "Brave"
+    ],
+    "killAfter": [
+      "brave.exe"
     ]
   },
   {
@@ -55,13 +68,16 @@
     "publisher": "Opera Software",
     "category": "Browsers",
     "description": "Browser with integrated VPN and sidebars.",
-    "icon": "\uD83D\uDD34",
+    "icon": "🔴",
     "size": "~90 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Opera.Opera",
     "detect": [
       "Opera"
+    ],
+    "killAfter": [
+      "opera.exe"
     ]
   },
   {
@@ -70,22 +86,26 @@
     "publisher": "Microsoft",
     "category": "Browsers",
     "description": "Microsoft's Chromium-based browser.",
-    "icon": "\uD83C\uDF0A",
+    "icon": "🌊",
     "size": "~150 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Edge",
     "detect": [
       "Microsoft Edge"
+    ],
+    "killAfter": [
+      "msedge.exe"
     ]
   },
   {
     "id": "vlc",
     "name": "VLC Media Player",
+    "localFile": "vlc-3.0.12-win64.exe",
     "publisher": "VideoLAN",
     "category": "Media",
     "description": "Plays virtually every audio and video format.",
-    "icon": "\uD83C\uDFAC",
+    "icon": "🎬",
     "size": "~40 MB",
     "url": null,
     "silentArgs": [],
@@ -100,13 +120,16 @@
     "publisher": "Spotify AB",
     "category": "Media",
     "description": "Music and podcast streaming client.",
-    "icon": "\uD83C\uDFB5",
+    "icon": "🎵",
     "size": "~130 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Spotify.Spotify",
     "detect": [
       "Spotify"
+    ],
+    "killAfter": [
+      "Spotify.exe"
     ]
   },
   {
@@ -115,13 +138,16 @@
     "publisher": "Apple",
     "category": "Media",
     "description": "Media player and device management by Apple.",
-    "icon": "\uD83C\uDFB6",
+    "icon": "🎶",
     "size": "~260 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Apple.iTunes",
     "detect": [
       "iTunes"
+    ],
+    "killAfter": [
+      "iTunes.exe"
     ]
   },
   {
@@ -130,7 +156,7 @@
     "publisher": "Muse Group",
     "category": "Media",
     "description": "Free multi-track audio editor and recorder.",
-    "icon": "\uD83C\uDF99\uFE0F",
+    "icon": "🎙️",
     "size": "~30 MB",
     "url": null,
     "silentArgs": [],
@@ -145,13 +171,16 @@
     "publisher": "OBS Project",
     "category": "Media",
     "description": "Screen recording and live streaming suite.",
-    "icon": "\uD83D\uDCF9",
+    "icon": "📹",
     "size": "~140 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "OBSProject.OBSStudio",
     "detect": [
       "OBS Studio"
+    ],
+    "killAfter": [
+      "obs64.exe"
     ]
   },
   {
@@ -160,7 +189,7 @@
     "publisher": "HandBrake Team",
     "category": "Media",
     "description": "Open source video transcoder.",
-    "icon": "\uD83C\uDF9E\uFE0F",
+    "icon": "🎞️",
     "size": "~20 MB",
     "url": null,
     "silentArgs": [],
@@ -175,7 +204,7 @@
     "publisher": "Igor Pavlov",
     "category": "Utilities",
     "description": "High compression ratio file archiver.",
-    "icon": "\uD83D\uDCE6",
+    "icon": "📦",
     "size": "~2 MB",
     "url": null,
     "silentArgs": [],
@@ -190,7 +219,7 @@
     "publisher": "RARLAB",
     "category": "Utilities",
     "description": "Archive manager for RAR and ZIP files.",
-    "icon": "\uD83D\uDDDC\uFE0F",
+    "icon": "🗜️",
     "size": "~4 MB",
     "url": null,
     "silentArgs": [],
@@ -205,7 +234,7 @@
     "publisher": "Notepad++ Team",
     "category": "Utilities",
     "description": "Lightweight source code and text editor.",
-    "icon": "\uD83D\uDCDD",
+    "icon": "📝",
     "size": "~5 MB",
     "url": null,
     "silentArgs": [],
@@ -220,13 +249,16 @@
     "publisher": "voidtools",
     "category": "Utilities",
     "description": "Instant file and folder search for Windows.",
-    "icon": "\uD83D\uDD0D",
+    "icon": "🔍",
     "size": "~2 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "voidtools.Everything",
     "detect": [
       "Everything"
+    ],
+    "killAfter": [
+      "Everything.exe"
     ]
   },
   {
@@ -235,13 +267,16 @@
     "publisher": "Microsoft",
     "category": "Utilities",
     "description": "Power user utilities for Windows.",
-    "icon": "\uD83E\uDDF0",
+    "icon": "🧰",
     "size": "~180 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.PowerToys",
     "detect": [
       "PowerToys"
+    ],
+    "killAfter": [
+      "PowerToys.exe"
     ]
   },
   {
@@ -250,13 +285,16 @@
     "publisher": "ShareX Team",
     "category": "Utilities",
     "description": "Screen capture, file sharing and productivity tool.",
-    "icon": "\u2702\uFE0F",
+    "icon": "✂️",
     "size": "~15 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "ShareX.ShareX",
     "detect": [
       "ShareX"
+    ],
+    "killAfter": [
+      "ShareX.exe"
     ]
   },
   {
@@ -265,13 +303,16 @@
     "publisher": "WinDirStat Team",
     "category": "Utilities",
     "description": "Disk usage statistics viewer and cleanup tool.",
-    "icon": "\uD83D\uDCBE",
+    "icon": "💾",
     "size": "~3 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "WinDirStat.WinDirStat",
     "detect": [
       "WinDirStat"
+    ],
+    "killAfter": [
+      "WinDirStat.exe"
     ]
   },
   {
@@ -280,13 +321,16 @@
     "publisher": "Bitwarden Inc.",
     "category": "Security",
     "description": "Open source password manager.",
-    "icon": "\uD83D\uDD10",
+    "icon": "🔐",
     "size": "~90 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Bitwarden.Bitwarden",
     "detect": [
       "Bitwarden"
+    ],
+    "killAfter": [
+      "Bitwarden.exe"
     ]
   },
   {
@@ -295,13 +339,16 @@
     "publisher": "KeePassXC Team",
     "category": "Security",
     "description": "Offline cross-platform password manager.",
-    "icon": "\uD83D\uDD11",
+    "icon": "🔑",
     "size": "~40 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "KeePassXCTeam.KeePassXC",
     "detect": [
       "KeePassXC"
+    ],
+    "killAfter": [
+      "KeePassXC.exe"
     ]
   },
   {
@@ -310,13 +357,17 @@
     "publisher": "Malwarebytes Inc.",
     "category": "Security",
     "description": "Anti-malware and threat removal scanner.",
-    "icon": "\uD83D\uDEE1\uFE0F",
+    "icon": "🛡️",
     "size": "~250 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Malwarebytes.Malwarebytes",
     "detect": [
       "Malwarebytes"
+    ],
+    "killAfter": [
+      "Malwarebytes.exe",
+      "mbamtray.exe"
     ]
   },
   {
@@ -325,7 +376,7 @@
     "publisher": "Microsoft",
     "category": "Development",
     "description": "Lightweight but powerful source code editor.",
-    "icon": "\uD83D\uDCBB",
+    "icon": "💻",
     "size": "~100 MB",
     "url": "https://update.code.visualstudio.com/latest/win32-x64-user/stable",
     "silentArgs": [
@@ -336,6 +387,9 @@
     "wingetId": "Microsoft.VisualStudioCode",
     "detect": [
       "Microsoft Visual Studio Code"
+    ],
+    "killAfter": [
+      "Code.exe"
     ]
   },
   {
@@ -344,7 +398,7 @@
     "publisher": "Git Project",
     "category": "Development",
     "description": "Distributed version control system.",
-    "icon": "\uD83C\uDF3F",
+    "icon": "🌿",
     "size": "~60 MB",
     "url": null,
     "silentArgs": [],
@@ -359,7 +413,7 @@
     "publisher": "OpenJS Foundation",
     "category": "Development",
     "description": "JavaScript runtime built on Chrome's V8 engine.",
-    "icon": "\uD83D\uDFE2",
+    "icon": "🟢",
     "size": "~30 MB",
     "url": null,
     "silentArgs": [],
@@ -374,7 +428,7 @@
     "publisher": "Python Software Foundation",
     "category": "Development",
     "description": "Interpreted, high-level programming language.",
-    "icon": "\uD83D\uDC0D",
+    "icon": "🐍",
     "size": "~28 MB",
     "url": null,
     "silentArgs": [],
@@ -389,7 +443,7 @@
     "publisher": "Docker Inc.",
     "category": "Development",
     "description": "Containerisation platform for building and sharing apps.",
-    "icon": "\uD83D\uDC33",
+    "icon": "🐳",
     "size": "~600 MB",
     "url": null,
     "silentArgs": [],
@@ -404,13 +458,16 @@
     "publisher": "GitHub",
     "category": "Development",
     "description": "Git client with a graphical interface.",
-    "icon": "\uD83D\uDC18",
+    "icon": "🐘",
     "size": "~120 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "GitHub.GitHubDesktop",
     "detect": [
       "GitHub Desktop"
+    ],
+    "killAfter": [
+      "GitHubDesktop.exe"
     ]
   },
   {
@@ -419,13 +476,16 @@
     "publisher": "Postman Inc.",
     "category": "Development",
     "description": "API platform for building and testing requests.",
-    "icon": "\uD83D\uDE80",
+    "icon": "🚀",
     "size": "~200 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Postman.Postman",
     "detect": [
       "Postman"
+    ],
+    "killAfter": [
+      "Postman.exe"
     ]
   },
   {
@@ -434,13 +494,16 @@
     "publisher": "DBeaver Corp",
     "category": "Development",
     "description": "Universal database client and SQL editor.",
-    "icon": "\uD83D\uDDC4\uFE0F",
+    "icon": "🗄️",
     "size": "~120 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "dbeaver.dbeaver",
     "detect": [
       "DBeaver"
+    ],
+    "killAfter": [
+      "dbeaver.exe"
     ]
   },
   {
@@ -449,13 +512,16 @@
     "publisher": "Discord Inc.",
     "category": "Communication",
     "description": "Voice, video and text chat for communities.",
-    "icon": "\uD83D\uDCAC",
+    "icon": "💬",
     "size": "~90 MB",
     "url": "https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64",
     "silentArgs": [],
     "wingetId": "Discord.Discord",
     "detect": [
       "Discord"
+    ],
+    "killAfter": [
+      "Discord.exe"
     ]
   },
   {
@@ -464,13 +530,16 @@
     "publisher": "Slack Technologies",
     "category": "Communication",
     "description": "Team messaging and collaboration hub.",
-    "icon": "\uD83D\uDD37",
+    "icon": "🔷",
     "size": "~120 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "SlackTechnologies.Slack",
     "detect": [
       "Slack"
+    ],
+    "killAfter": [
+      "slack.exe"
     ]
   },
   {
@@ -480,13 +549,16 @@
     "publisher": "Zoom Video Communications",
     "category": "Communication",
     "description": "Video meetings, webinars and screen sharing.",
-    "icon": "\uD83D\uDCF8",
+    "icon": "📸",
     "size": "~90 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Zoom.Zoom",
     "detect": [
       "Zoom"
+    ],
+    "killAfter": [
+      "Zoom.exe"
     ]
   },
   {
@@ -495,13 +567,17 @@
     "publisher": "Microsoft",
     "category": "Communication",
     "description": "Chat and collaboration for Microsoft 365.",
-    "icon": "\uD83D\uDC65",
+    "icon": "👥",
     "size": "~150 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Teams",
     "detect": [
       "Microsoft Teams"
+    ],
+    "killAfter": [
+      "ms-teams.exe",
+      "Teams.exe"
     ]
   },
   {
@@ -510,13 +586,16 @@
     "publisher": "Microsoft",
     "category": "Communication",
     "description": "Voice, video calls and instant messaging.",
-    "icon": "\u260E\uFE0F",
+    "icon": "☎️",
     "size": "~120 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Skype",
     "detect": [
       "Skype"
+    ],
+    "killAfter": [
+      "Skype.exe"
     ]
   },
   {
@@ -525,13 +604,16 @@
     "publisher": "Telegram FZ-LLC",
     "category": "Communication",
     "description": "Fast, cloud-based messaging client.",
-    "icon": "\u2708\uFE0F",
+    "icon": "✈️",
     "size": "~40 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Telegram.TelegramDesktop",
     "detect": [
       "Telegram"
+    ],
+    "killAfter": [
+      "Telegram.exe"
     ]
   },
   {
@@ -540,7 +622,7 @@
     "publisher": "The Document Foundation",
     "category": "Productivity",
     "description": "Free office suite: Writer, Calc, Impress and more.",
-    "icon": "\uD83D\uDCC4",
+    "icon": "📄",
     "size": "~340 MB",
     "url": null,
     "silentArgs": [],
@@ -555,7 +637,7 @@
     "publisher": "Mozilla",
     "category": "Productivity",
     "description": "Desktop email, calendar and news client.",
-    "icon": "\uD83D\uDCEC",
+    "icon": "📬",
     "size": "~60 MB",
     "url": "https://download.mozilla.org/?product=thunderbird-latest-ssl&os=win64&lang=en-US",
     "silentArgs": [
@@ -565,6 +647,9 @@
     "detect": [
       "Mozilla Thunderbird",
       "Thunderbird"
+    ],
+    "killAfter": [
+      "thunderbird.exe"
     ]
   },
   {
@@ -573,13 +658,16 @@
     "publisher": "Adobe",
     "category": "Productivity",
     "description": "View, annotate and sign PDF documents.",
-    "icon": "\uD83D\uDD34",
+    "icon": "🔴",
     "size": "~250 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Adobe.Acrobat.Reader.64-bit",
     "detect": [
       "Adobe Acrobat Reader"
+    ],
+    "killAfter": [
+      "AcroRd32.exe"
     ]
   },
   {
@@ -588,13 +676,16 @@
     "publisher": "Notion Labs",
     "category": "Productivity",
     "description": "Notes, docs, wikis and project management.",
-    "icon": "\uD83D\uDCD2",
+    "icon": "📒",
     "size": "~90 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Notion.Notion",
     "detect": [
       "Notion"
+    ],
+    "killAfter": [
+      "Notion.exe"
     ]
   },
   {
@@ -603,13 +694,16 @@
     "publisher": "Obsidian",
     "category": "Productivity",
     "description": "Markdown-based knowledge base and notes.",
-    "icon": "\uD83D\uDD2E",
+    "icon": "🔮",
     "size": "~80 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "Obsidian.Obsidian",
     "detect": [
       "Obsidian"
+    ],
+    "killAfter": [
+      "Obsidian.exe"
     ]
   },
   {
@@ -618,13 +712,16 @@
     "publisher": "AnyDesk Software",
     "category": "Productivity",
     "description": "Remote desktop access and support tool.",
-    "icon": "\uD83D\uDDA5\uFE0F",
+    "icon": "🖥️",
     "size": "~5 MB",
     "url": null,
     "silentArgs": [],
     "wingetId": "AnyDeskSoftwareGmbH.AnyDesk",
     "detect": [
       "AnyDesk"
+    ],
+    "killAfter": [
+      "AnyDesk.exe"
     ]
   },
   {
@@ -633,7 +730,7 @@
     "publisher": "Microsoft",
     "category": "Runtimes",
     "description": "Required runtime libraries for C++ applications.",
-    "icon": "\uD83E\uDDE9",
+    "icon": "🧩",
     "size": "~25 MB",
     "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
     "silentArgs": [
@@ -654,7 +751,7 @@
     "publisher": "Microsoft",
     "category": "Runtimes",
     "description": "Runtime required for Windows desktop .NET apps.",
-    "icon": "\uD83D\uDD27",
+    "icon": "🔧",
     "size": "~55 MB",
     "url": null,
     "silentArgs": [],
@@ -669,7 +766,7 @@
     "publisher": "Eclipse Adoptium",
     "category": "Runtimes",
     "description": "Open source Java runtime environment.",
-    "icon": "\u2615",
+    "icon": "☕",
     "size": "~50 MB",
     "url": null,
     "silentArgs": [],

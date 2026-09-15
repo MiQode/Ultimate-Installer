@@ -4,8 +4,17 @@ const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("node:path");
 const fs = require("node:fs");
 const { Installer } = require("./installer.cjs");
+const { isElevated, relaunchElevated } = require("./elevation.cjs");
 
 const isDev = process.env.NODE_ENV === "development";
+const SKIP_ELEVATION = process.env.ULTIMATE_NO_ELEVATE === "1";
+
+// Only one instance may run, otherwise an elevated relaunch would leave a
+// duplicate window behind.
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+}
 
 /**
  * The offline repository. In a packaged build electron-builder copies
@@ -143,9 +152,28 @@ function registerIpc() {
   });
 
   ipcMain.handle("software:winget-available", () => installer.hasWinget());
+
+  ipcMain.handle("app:elevated", () => isElevated());
 }
 
-app.whenReady().then(() => {
+app.on("second-instance", () => {
+  if (!mainWindow) return;
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.focus();
+});
+
+app.whenReady().then(async () => {
+  // One UAC prompt for the whole session: elevate now, then every installer we
+  // launch inherits the admin token and runs silently.
+  if (!SKIP_ELEVATION && !(await isElevated())) {
+    const started = await relaunchElevated();
+    if (started) {
+      app.quit();
+      return;
+    }
+    // User declined - carry on unelevated; per-installer UAC prompts may appear.
+  }
+
   registerIpc();
   createWindow();
 

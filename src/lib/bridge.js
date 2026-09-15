@@ -6,6 +6,7 @@ const fallback = {
   install: async () => [],
   cancel: async () => true,
   hasWinget: async () => false,
+  isElevated: async () => false,
   onProgress: noop,
   onItemDone: noop,
   onComplete: noop,

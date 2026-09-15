@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("installer", {
   install: (apps) => ipcRenderer.invoke("software:install", apps),
   cancel: () => ipcRenderer.invoke("software:cancel"),
   hasWinget: () => ipcRenderer.invoke("software:winget-available"),
+  isElevated: () => ipcRenderer.invoke("app:elevated"),
 
   onProgress: (callback) => {
     const handler = (_event, payload) => callback(payload);
