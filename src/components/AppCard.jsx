@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Check, Clock, Loader2, AlertTriangle, HardDrive } from "lucide-react";
 import { sourceLabels } from "@/lib/bridge";
 
@@ -54,6 +55,8 @@ export default function AppCard({ app, selected, status, onToggle, disabled }) {
   const badge = badgeFor(status);
   const BadgeIcon = badge?.icon;
   const busy = status === "downloading" || status === "installing";
+  const [imgFailed, setImgFailed] = useState(false);
+  const showIconFile = app.iconFile && !imgFailed;
 
   return (
     <button
@@ -67,7 +70,16 @@ export default function AppCard({ app, selected, status, onToggle, disabled }) {
       } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
     >
       <div className="flex items-start gap-3">
-        <span className="text-2xl leading-none">{app.icon}</span>
+        {showIconFile ? (
+          <img
+            src={app.iconFile}
+            alt={app.name}
+            className="h-7 w-7 shrink-0 rounded-lg object-contain"
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <span className="text-2xl leading-none">{app.icon}</span>
+        )}
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-slate-100">{app.name}</p>
           <p className="truncate text-xs text-slate-500">{app.publisher}</p>

@@ -1,21 +1,22 @@
+import AppLogo from "@/components/AppLogo";
+
 export default function Sidebar({
   categories,
   activeCategory,
   onCategoryChange,
   selectedCount,
+  version,
 }) {
   return (
     <aside className="w-60 shrink-0 border-r border-slate-800 bg-slate-900/60 flex flex-col">
       <div className="px-5 py-5 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-sky-500 to-indigo-600 text-lg font-bold text-white">
-            U
-          </div>
+          <AppLogo className="h-10 w-10 rounded-xl" />
           <div>
             <p className="text-sm font-semibold text-slate-100 leading-tight">
               Ultimate Installer
             </p>
-            <p className="text-xs text-slate-500">Bulk app deployment</p>
+            <p className="text-xs text-slate-500">v{version}</p>
           </div>
         </div>
       </div>
@@ -37,7 +38,9 @@ export default function Sidebar({
               <span>{name}</span>
               <span
                 className={`rounded-full px-2 py-0.5 text-xs ${
-                  active ? "bg-sky-500/20 text-sky-200" : "bg-slate-800 text-slate-500"
+                  active
+                    ? "bg-sky-500/20 text-sky-200"
+                    : "bg-slate-800 text-slate-500"
                 }`}
               >
                 {count}

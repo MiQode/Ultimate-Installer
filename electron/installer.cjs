@@ -101,8 +101,8 @@ class Installer {
   // ---------------------------------------------------------------------------
 
   /**
-   * Reads every uninstall-registry entry once and returns the list of
-   * DisplayName values. Used to tell whether a catalogue app is already present.
+   * Reads uninstall-registry entries and returns objects with DisplayName and
+   * InstallLocation so we can verify the app actually exists on disk.
    */
   async getInstalledPrograms(force = false) {
     if (this.installedCache && !force) return this.installedCache;
@@ -113,10 +113,10 @@ class Installer {
       "'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',",
       "'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*');",
       "Get-ItemProperty $keys | Where-Object { $_.DisplayName } |",
-      "Select-Object -ExpandProperty DisplayName -Unique | ConvertTo-Json -Compress",
+      "Select-Object DisplayName,InstallLocation | ConvertTo-Json -Compress",
     ].join(" ");
 
-    const names = await new Promise((resolve) => {
+    const raw = await new Promise((resolve) => {
       execFile(
         "powershell.exe",
         ["-NoProfile", "-NonInteractive", "-Command", script],
@@ -133,16 +133,31 @@ class Installer {
       );
     });
 
-    this.installedCache = names;
-    return names;
+    // Normalise to { name, location } and strip entries with no name
+    const entries = raw
+      .filter((e) => e && e.DisplayName)
+      .map((e) => ({
+        name: String(e.DisplayName),
+        location: String(e.InstallLocation || ""),
+      }));
+
+    this.installedCache = entries;
+    return entries;
   }
 
   isInstalled(app, installedPrograms) {
     if (!app.detect || app.detect.length === 0) return false;
-    const haystack = installedPrograms.map((n) => String(n).toLowerCase());
-    return app.detect.some((needle) =>
-      haystack.some((name) => name.includes(String(needle).toLowerCase())),
-    );
+    return app.detect.some((needle) => {
+      const needleLower = String(needle).toLowerCase();
+      return installedPrograms.some((entry) => {
+        if (!entry.name.toLowerCase().includes(needleLower)) return false;
+        // If the entry has an InstallLocation, verify the path exists on disk.
+        // This prevents false positives when an installer registered in the
+        // registry but the user cancelled before files were actually placed.
+        if (entry.location && !fs.existsSync(entry.location)) return false;
+        return true;
+      });
+    });
   }
 
   async hasWinget() {
@@ -231,7 +246,9 @@ class Installer {
 
     await this.closeAutoLaunched(app);
 
-    if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
+    if (this.cancelled || code === 1602) {
+      return { id: app.id, name: app.name, status: "cancelled" };
+    }
     if (code === 0 || code === 3010) {
       return {
         id: app.id,
@@ -313,7 +330,9 @@ class Installer {
     await this.closeAutoLaunched(app);
     await fsp.rm(destination, { force: true }).catch(() => {});
 
-    if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
+    if (this.cancelled || code === 1602) {
+      return { id: app.id, name: app.name, status: "cancelled" };
+    }
     if (code === 0 || code === 3010) {
       return {
         id: app.id,
@@ -356,7 +375,9 @@ class Installer {
 
     await this.closeAutoLaunched(app);
 
-    if (this.cancelled) return { id: app.id, name: app.name, status: "cancelled" };
+    if (this.cancelled || code === 1602) {
+      return { id: app.id, name: app.name, status: "cancelled" };
+    }
     if (code === 0) {
       return { id: app.id, name: app.name, status: "installed", source: "winget" };
     }

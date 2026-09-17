@@ -7,6 +7,7 @@ const fallback = {
   cancel: async () => true,
   hasWinget: async () => false,
   isElevated: async () => false,
+  close: async () => true,
   onProgress: noop,
   onItemDone: noop,
   onComplete: noop,

@@ -1,9 +1,13 @@
-import { Search, RefreshCw, HardDrive, Shield, ShieldAlert } from "lucide-react";
+import { Search, RefreshCw, HardDrive, Shield, ShieldAlert, CheckSquare, XSquare } from "lucide-react";
 
 export default function TopBar({
   query,
   onQueryChange,
   onRefresh,
+  onSelectAll,
+  onClear,
+  hasSelection,
+  allSelected,
   loading,
   total,
   installedCount,
@@ -50,6 +54,28 @@ export default function TopBar({
       </span>
 
       <div className="ml-auto flex items-center gap-3">
+        {!allSelected && (
+          <button
+            type="button"
+            onClick={onSelectAll}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800"
+          >
+            <CheckSquare className="h-4 w-4" />
+            Select all
+          </button>
+        )}
+
+        {hasSelection && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800"
+          >
+            <XSquare className="h-4 w-4" />
+            Clear
+          </button>
+        )}
+
         <div className="relative">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
           <input

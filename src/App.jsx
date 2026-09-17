@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import AppCard from "@/components/AppCard";
 import InstallPanel from "@/components/InstallPanel";
 import { bridge } from "@/lib/bridge";
+import { version } from "../package.json";
 
 const ALL = "All Apps";
 
@@ -36,17 +37,27 @@ export default function App() {
       offlineStatus = o.status === "fulfilled" ? o.value : { count: 0, directory: "" };
       elev = e.status === "fulfilled" ? e.value : false;
     } finally {
-      setApps(Array.isArray(list) ? list : []);
+      const appList = Array.isArray(list) ? list : [];
+      setApps(appList);
       setOffline(offlineStatus ?? { count: 0, directory: "" });
       setElevated(Boolean(elev));
       setLoading(false);
     }
   }, []);
 
+  const isFirstLoad = useRef(true);
+
   useEffect(() => {
     const timer = setTimeout(loadApps, 0);
     return () => clearTimeout(timer);
   }, [loadApps]);
+
+  useEffect(() => {
+    if (isFirstLoad.current && apps.length > 0) {
+      isFirstLoad.current = false;
+      setSelected(new Set(apps.filter((a) => a.default && !a.installed).map((a) => a.id)));
+    }
+  }, [apps]);
 
   useEffect(() => {
     const offProgress = bridge.onProgress((payload) => {
@@ -114,6 +125,14 @@ export default function App() {
     });
   };
 
+  const selectAll = () => {
+    setSelected(new Set(apps.filter((a) => !a.installed).map((a) => a.id)));
+  };
+
+  const clearSelection = () => {
+    setSelected(new Set());
+  };
+
   const startInstall = async () => {
     const list = apps.filter((app) => selected.has(app.id));
     if (list.length === 0) return;
@@ -136,6 +155,10 @@ export default function App() {
     setSelected(new Set());
   };
 
+  const finish = () => {
+    bridge.close();
+  };
+
   const installedCount = apps.filter((app) => app.installed).length;
   const running = phase === "running";
 
@@ -146,6 +169,7 @@ export default function App() {
         activeCategory={activeCategory}
         onCategoryChange={setActiveCategory}
         selectedCount={selected.size}
+        version={version}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -153,6 +177,10 @@ export default function App() {
           query={query}
           onQueryChange={setQuery}
           onRefresh={loadApps}
+          onSelectAll={selectAll}
+          onClear={clearSelection}
+          hasSelection={selected.size > 0}
+          allSelected={selected.size === apps.filter((a) => !a.installed).length}
           loading={loading}
           total={apps.length}
           installedCount={installedCount}
@@ -189,6 +217,7 @@ export default function App() {
           onInstall={startInstall}
           onCancel={cancel}
           onReset={reset}
+          onFinish={finish}
         />
       </div>
     </div>

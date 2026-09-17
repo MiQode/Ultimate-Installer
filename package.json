@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Ultimate Windows Software Installer - select apps and install them silently in the background",
   "main": "electron/main.cjs",
-  "author": "Mike Rembo",
+  "author": "Trails LLC",
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n VITE,ELECTRON \"vite\" \"wait-on tcp:127.0.0.1:5173 && cross-env NODE_ENV=development electron .\"",
