@@ -7,6 +7,7 @@
     "description": "Fast, secure browser built by Google.",
     "icon": "🌐",
     "size": "~110 MB",
+    "localFile": "chrome.exe",
     "url": "https://dl.google.com/chrome/install/standalonesetup64.exe",
     "silentArgs": [
       "/silent",
@@ -16,12 +17,8 @@
       "--no-first-run"
     ],
     "wingetId": "Google.Chrome",
-    "detect": [
-      "Google Chrome"
-    ],
-    "killAfter": [
-      "chrome.exe"
-    ]
+    "detect": ["Google Chrome"],
+    "killAfter": ["chrome.exe"]
   },
   {
     "id": "mozilla-firefox",
@@ -32,17 +29,10 @@
     "icon": "🦊",
     "size": "~60 MB",
     "url": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US",
-    "silentArgs": [
-      "/S",
-      "/noreboot"
-    ],
+    "silentArgs": ["/S", "/noreboot"],
     "wingetId": "Mozilla.Firefox",
-    "detect": [
-      "Mozilla Firefox"
-    ],
-    "killAfter": [
-      "firefox.exe"
-    ]
+    "detect": ["Mozilla Firefox"],
+    "killAfter": ["firefox.exe"]
   },
   {
     "id": "brave",
@@ -55,12 +45,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Brave.Brave",
-    "detect": [
-      "Brave"
-    ],
-    "killAfter": [
-      "brave.exe"
-    ]
+    "detect": ["Brave"],
+    "killAfter": ["brave.exe"]
   },
   {
     "id": "opera",
@@ -73,12 +59,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Opera.Opera",
-    "detect": [
-      "Opera"
-    ],
-    "killAfter": [
-      "opera.exe"
-    ]
+    "detect": ["Opera"],
+    "killAfter": ["opera.exe"]
   },
   {
     "id": "microsoft-edge",
@@ -91,12 +73,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Edge",
-    "detect": [
-      "Microsoft Edge"
-    ],
-    "killAfter": [
-      "msedge.exe"
-    ]
+    "detect": ["Microsoft Edge"],
+    "killAfter": ["msedge.exe"]
   },
   {
     "id": "vlc",
@@ -110,9 +88,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "VideoLAN.VLC",
-    "detect": [
-      "VLC media player"
-    ]
+    "detect": ["VLC media player"]
   },
   {
     "id": "spotify",
@@ -125,12 +101,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Spotify.Spotify",
-    "detect": [
-      "Spotify"
-    ],
-    "killAfter": [
-      "Spotify.exe"
-    ]
+    "detect": ["Spotify"],
+    "killAfter": ["Spotify.exe"]
   },
   {
     "id": "itunes",
@@ -143,12 +115,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Apple.iTunes",
-    "detect": [
-      "iTunes"
-    ],
-    "killAfter": [
-      "iTunes.exe"
-    ]
+    "detect": ["iTunes"],
+    "killAfter": ["iTunes.exe"]
   },
   {
     "id": "audacity",
@@ -161,9 +129,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Audacity.Audacity",
-    "detect": [
-      "Audacity"
-    ]
+    "detect": ["Audacity"]
   },
   {
     "id": "obs-studio",
@@ -176,12 +142,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "OBSProject.OBSStudio",
-    "detect": [
-      "OBS Studio"
-    ],
-    "killAfter": [
-      "obs64.exe"
-    ]
+    "detect": ["OBS Studio"],
+    "killAfter": ["obs64.exe"]
   },
   {
     "id": "handbrake",
@@ -194,9 +156,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "HandBrake.HandBrake",
-    "detect": [
-      "HandBrake"
-    ]
+    "detect": ["HandBrake"]
   },
   {
     "id": "7zip",
@@ -209,9 +169,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "7zip.7zip",
-    "detect": [
-      "7-Zip"
-    ]
+    "detect": ["7-Zip"]
   },
   {
     "id": "winrar",
@@ -224,9 +182,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "RARLab.WinRAR",
-    "detect": [
-      "WinRAR"
-    ]
+    "detect": ["WinRAR"]
   },
   {
     "id": "notepadpp",
@@ -239,9 +195,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Notepad++.Notepad++",
-    "detect": [
-      "Notepad++"
-    ]
+    "detect": ["Notepad++"]
   },
   {
     "id": "everything",
@@ -254,12 +208,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "voidtools.Everything",
-    "detect": [
-      "Everything"
-    ],
-    "killAfter": [
-      "Everything.exe"
-    ]
+    "detect": ["Everything"],
+    "killAfter": ["Everything.exe"]
   },
   {
     "id": "powertoys",
@@ -272,12 +222,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.PowerToys",
-    "detect": [
-      "PowerToys"
-    ],
-    "killAfter": [
-      "PowerToys.exe"
-    ]
+    "detect": ["PowerToys"],
+    "killAfter": ["PowerToys.exe"]
   },
   {
     "id": "sharex",
@@ -290,12 +236,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "ShareX.ShareX",
-    "detect": [
-      "ShareX"
-    ],
-    "killAfter": [
-      "ShareX.exe"
-    ]
+    "detect": ["ShareX"],
+    "killAfter": ["ShareX.exe"]
   },
   {
     "id": "windirstat",
@@ -308,12 +250,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "WinDirStat.WinDirStat",
-    "detect": [
-      "WinDirStat"
-    ],
-    "killAfter": [
-      "WinDirStat.exe"
-    ]
+    "detect": ["WinDirStat"],
+    "killAfter": ["WinDirStat.exe"]
   },
   {
     "id": "bitwarden",
@@ -326,12 +264,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Bitwarden.Bitwarden",
-    "detect": [
-      "Bitwarden"
-    ],
-    "killAfter": [
-      "Bitwarden.exe"
-    ]
+    "detect": ["Bitwarden"],
+    "killAfter": ["Bitwarden.exe"]
   },
   {
     "id": "keepassxc",
@@ -344,12 +278,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "KeePassXCTeam.KeePassXC",
-    "detect": [
-      "KeePassXC"
-    ],
-    "killAfter": [
-      "KeePassXC.exe"
-    ]
+    "detect": ["KeePassXC"],
+    "killAfter": ["KeePassXC.exe"]
   },
   {
     "id": "malwarebytes",
@@ -362,13 +292,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Malwarebytes.Malwarebytes",
-    "detect": [
-      "Malwarebytes"
-    ],
-    "killAfter": [
-      "Malwarebytes.exe",
-      "mbamtray.exe"
-    ]
+    "detect": ["Malwarebytes"],
+    "killAfter": ["Malwarebytes.exe", "mbamtray.exe"]
   },
   {
     "id": "vscode",
@@ -379,18 +304,10 @@
     "icon": "💻",
     "size": "~100 MB",
     "url": "https://update.code.visualstudio.com/latest/win32-x64-user/stable",
-    "silentArgs": [
-      "/VERYSILENT",
-      "/NORESTART",
-      "/MERGETASKS=!runcode"
-    ],
+    "silentArgs": ["/VERYSILENT", "/NORESTART", "/MERGETASKS=!runcode"],
     "wingetId": "Microsoft.VisualStudioCode",
-    "detect": [
-      "Microsoft Visual Studio Code"
-    ],
-    "killAfter": [
-      "Code.exe"
-    ]
+    "detect": ["Microsoft Visual Studio Code"],
+    "killAfter": ["Code.exe"]
   },
   {
     "id": "git",
@@ -403,9 +320,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Git.Git",
-    "detect": [
-      "Git"
-    ]
+    "detect": ["Git"]
   },
   {
     "id": "nodejs",
@@ -418,9 +333,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "OpenJS.NodeJS.LTS",
-    "detect": [
-      "Node.js"
-    ]
+    "detect": ["Node.js"]
   },
   {
     "id": "python",
@@ -433,9 +346,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Python.Python.3.12",
-    "detect": [
-      "Python"
-    ]
+    "detect": ["Python"]
   },
   {
     "id": "docker-desktop",
@@ -448,9 +359,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Docker.DockerDesktop",
-    "detect": [
-      "Docker Desktop"
-    ]
+    "detect": ["Docker Desktop"]
   },
   {
     "id": "github-desktop",
@@ -463,12 +372,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "GitHub.GitHubDesktop",
-    "detect": [
-      "GitHub Desktop"
-    ],
-    "killAfter": [
-      "GitHubDesktop.exe"
-    ]
+    "detect": ["GitHub Desktop"],
+    "killAfter": ["GitHubDesktop.exe"]
   },
   {
     "id": "postman",
@@ -481,12 +386,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Postman.Postman",
-    "detect": [
-      "Postman"
-    ],
-    "killAfter": [
-      "Postman.exe"
-    ]
+    "detect": ["Postman"],
+    "killAfter": ["Postman.exe"]
   },
   {
     "id": "dbeaver",
@@ -499,12 +400,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "dbeaver.dbeaver",
-    "detect": [
-      "DBeaver"
-    ],
-    "killAfter": [
-      "dbeaver.exe"
-    ]
+    "detect": ["DBeaver"],
+    "killAfter": ["dbeaver.exe"]
   },
   {
     "id": "discord",
@@ -517,12 +414,8 @@
     "url": "https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64",
     "silentArgs": [],
     "wingetId": "Discord.Discord",
-    "detect": [
-      "Discord"
-    ],
-    "killAfter": [
-      "Discord.exe"
-    ]
+    "detect": ["Discord"],
+    "killAfter": ["Discord.exe"]
   },
   {
     "id": "slack",
@@ -535,12 +428,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "SlackTechnologies.Slack",
-    "detect": [
-      "Slack"
-    ],
-    "killAfter": [
-      "slack.exe"
-    ]
+    "detect": ["Slack"],
+    "killAfter": ["slack.exe"]
   },
   {
     "id": "zoom",
@@ -554,12 +443,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Zoom.Zoom",
-    "detect": [
-      "Zoom"
-    ],
-    "killAfter": [
-      "Zoom.exe"
-    ]
+    "detect": ["Zoom"],
+    "killAfter": ["Zoom.exe"]
   },
   {
     "id": "microsoft-teams",
@@ -572,13 +457,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Teams",
-    "detect": [
-      "Microsoft Teams"
-    ],
-    "killAfter": [
-      "ms-teams.exe",
-      "Teams.exe"
-    ]
+    "detect": ["Microsoft Teams"],
+    "killAfter": ["ms-teams.exe", "Teams.exe"]
   },
   {
     "id": "skype",
@@ -591,12 +471,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.Skype",
-    "detect": [
-      "Skype"
-    ],
-    "killAfter": [
-      "Skype.exe"
-    ]
+    "detect": ["Skype"],
+    "killAfter": ["Skype.exe"]
   },
   {
     "id": "telegram",
@@ -609,12 +485,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Telegram.TelegramDesktop",
-    "detect": [
-      "Telegram"
-    ],
-    "killAfter": [
-      "Telegram.exe"
-    ]
+    "detect": ["Telegram"],
+    "killAfter": ["Telegram.exe"]
   },
   {
     "id": "libreoffice",
@@ -627,9 +499,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "TheDocumentFoundation.LibreOffice",
-    "detect": [
-      "LibreOffice"
-    ]
+    "detect": ["LibreOffice"]
   },
   {
     "id": "thunderbird",
@@ -640,17 +510,10 @@
     "icon": "📬",
     "size": "~60 MB",
     "url": "https://download.mozilla.org/?product=thunderbird-latest-ssl&os=win64&lang=en-US",
-    "silentArgs": [
-      "/S"
-    ],
+    "silentArgs": ["/S"],
     "wingetId": "Mozilla.Thunderbird",
-    "detect": [
-      "Mozilla Thunderbird",
-      "Thunderbird"
-    ],
-    "killAfter": [
-      "thunderbird.exe"
-    ]
+    "detect": ["Mozilla Thunderbird", "Thunderbird"],
+    "killAfter": ["thunderbird.exe"]
   },
   {
     "id": "adobe-reader",
@@ -663,12 +526,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Adobe.Acrobat.Reader.64-bit",
-    "detect": [
-      "Adobe Acrobat Reader"
-    ],
-    "killAfter": [
-      "AcroRd32.exe"
-    ]
+    "detect": ["Adobe Acrobat Reader"],
+    "killAfter": ["AcroRd32.exe"]
   },
   {
     "id": "notion",
@@ -681,12 +540,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Notion.Notion",
-    "detect": [
-      "Notion"
-    ],
-    "killAfter": [
-      "Notion.exe"
-    ]
+    "detect": ["Notion"],
+    "killAfter": ["Notion.exe"]
   },
   {
     "id": "obsidian",
@@ -699,17 +554,14 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Obsidian.Obsidian",
-    "detect": [
-      "Obsidian"
-    ],
-    "killAfter": [
-      "Obsidian.exe"
-    ]
+    "detect": ["Obsidian"],
+    "killAfter": ["Obsidian.exe"]
   },
   {
     "id": "anydesk",
     "name": "AnyDesk",
     "publisher": "AnyDesk Software",
+    "localFile": "AnyDesk.exe",
     "category": "Productivity",
     "description": "Remote desktop access and support tool.",
     "icon": "🖥️",
@@ -717,12 +569,8 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "AnyDeskSoftwareGmbH.AnyDesk",
-    "detect": [
-      "AnyDesk"
-    ],
-    "killAfter": [
-      "AnyDesk.exe"
-    ]
+    "detect": ["AnyDesk"],
+    "killAfter": ["AnyDesk.exe"]
   },
   {
     "id": "vcredist-x64",
@@ -733,11 +581,7 @@
     "icon": "🧩",
     "size": "~25 MB",
     "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-    "silentArgs": [
-      "/install",
-      "/quiet",
-      "/norestart"
-    ],
+    "silentArgs": ["/install", "/quiet", "/norestart"],
     "wingetId": "Microsoft.VCRedist.2015+.x64",
     "detect": [
       "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
@@ -756,9 +600,7 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "Microsoft.DotNet.DesktopRuntime.8",
-    "detect": [
-      "Microsoft Windows Desktop Runtime"
-    ]
+    "detect": ["Microsoft Windows Desktop Runtime"]
   },
   {
     "id": "java-temurin",
@@ -771,9 +613,6 @@
     "url": null,
     "silentArgs": [],
     "wingetId": "EclipseAdoptium.Temurin.21.JRE",
-    "detect": [
-      "Eclipse Temurin",
-      "Java"
-    ]
+    "detect": ["Eclipse Temurin", "Java"]
   }
 ]

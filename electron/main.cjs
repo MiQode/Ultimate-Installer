@@ -166,7 +166,8 @@ app.whenReady().then(async () => {
   // One UAC prompt for the whole session: elevate now, then every installer we
   // launch inherits the admin token and runs silently.
   if (!SKIP_ELEVATION && !(await isElevated())) {
-    const started = await relaunchElevated();
+    const appArgs = process.argv.slice(1);
+    const started = await relaunchElevated({ args: appArgs });
     if (started) {
       app.quit();
       return;

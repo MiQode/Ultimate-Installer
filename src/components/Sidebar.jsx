@@ -8,7 +8,7 @@ export default function Sidebar({
     <aside className="w-60 shrink-0 border-r border-slate-800 bg-slate-900/60 flex flex-col">
       <div className="px-5 py-5 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 text-lg font-bold text-white">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-linear-to-br from-sky-500 to-indigo-600 text-lg font-bold text-white">
             U
           </div>
           <div>

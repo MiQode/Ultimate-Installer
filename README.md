@@ -156,28 +156,19 @@ You may provide any combination; the engine picks the best available source.
 
 ## Administrator rights (UAC)
 
-You cannot programmatically dismiss a UAC prompt — that is a Windows security
-boundary. The app works around this by elevating **once at startup**. When the
-electron-builder package includes `requestedExecutionLevel: "requireAdministrator"`
-in its manifest, Windows shows exactly one UAC prompt when the user opens the
-app, and every installer launched afterwards inherits that admin token silently.
+You cannot programmatically dismiss a UAC prompt — that is a Windows security boundary. The app works around this by elevating **once at startup**. When the electron-builder package includes `requestedExecutionLevel: "requireAdministrator"`
+in its manifest, Windows shows exactly one UAC prompt when the user opens the app, and every installer launched afterwards inherits that admin token silently.
 
-In development (`npm run dev`), the manifest is not applied to the Electron binary,
-so a second approach is used: the app detects it is not elevated and relaunches
-itself via `Start-Process -Verb RunAs`, which raises one UAC dialog. If the user
-declines, the app continues unelevated and individual installers may prompt.
+In development (`npm run dev`), the manifest is not applied to the Electron binary, so a second approach is used: the app detects it is not elevated and relaunches itself via `Start-Process -Verb RunAs`, which raises one UAC dialog. If the user declines, the app continues unelevated and individual installers may prompt.
 
-The header shows an **Admin / Standard** badge so the user knows whether all
-installs will run without further prompts.
+The header shows an **Admin / Standard** badge so the user knows whether all installs will run without further prompts.
 
 > To skip the elevation dialog in development, set the environment variable
 > `ULTIMATE_NO_ELEVATE=1`.
 
 ## Silent installs, checkbox bypass and preventing auto-launch
 
-Every app in the catalogue has a `silentArgs` array. These are the switches that
-bypass the setup wizard, pre-select all options, and suppress any "launch now"
-checkboxes. For example:
+Every app in the catalogue has a `silentArgs` array. These are the switches that bypass the setup wizard, pre-select all options, and suppress any "launch now" checkboxes. For example:
 
 | Installer type  | Flags                                        |
 | --------------- | -------------------------------------------- |
@@ -187,24 +178,15 @@ checkboxes. For example:
 | InstallShield   | `/s /v"/qn"`                                 |
 | winget          | `--silent --disable-interactivity`           |
 
-MSI installers are automatically wrapped with `/qn` and reboot suppression if
-the catalogue entry omits them, so no wizard can appear.
+MSI installers are automatically wrapped with `/qn` and reboot suppression if the catalogue entry omits them, so no wizard can appear.
 
-Some installers auto-open their app once finished. The engine combats this with
-a `killAfter` field — a list of process names to terminate immediately after
-each install completes (via `taskkill /F /T`). Browsers, editors, chat apps
-and other GUI installers are all covered.
+Some installers auto-open their app once finished. The engine combats this with a `killAfter` field — a list of process names to terminate immediately after each install completes (via `taskkill /F /T`). Browsers, editors, chat apps and other GUI installers are all covered.
 
-For installers that expose bundled offers through checkboxes or tabs that silent
-switches cannot suppress, the offline repository supports `.bat`, `.cmd` and
-`.ps1` wrapper scripts. These run in a hidden console and can automate any
-choice — drop a wrapper script into `installers/` and set `localFile` to the
-script name.
+For installers that expose bundled offers through checkboxes or tabs that silent switches cannot suppress, the offline repository supports `.bat`, `.cmd` and `.ps1` wrapper scripts. These run in a hidden console and can automate any choice — drop a wrapper script into `installers/` and set `localFile` to the script name.
 
 ## Building into a standalone distributable
 
-The final product is a single `.exe` installer (NSIS) that can be distributed
-to other machines, just like any standard Windows application.
+The final product is a single `.exe` installer (NSIS) that can be distributed to other machines, just like any standard Windows application.
 
 ```powershell
 # Full pipeline: build the UI, package the Electron app, produce the installer

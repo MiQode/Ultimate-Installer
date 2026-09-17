@@ -43,7 +43,7 @@ function relaunchElevated({ args = [], onError = () => {} } = {}) {
     const executable = process.execPath;
     const quotedArgs = args
       .map((arg) => `'${String(arg).replace(/'/g, "''")}'`)
-      .join(",");
+      .join(" ");
 
     const command = quotedArgs
       ? `Start-Process -FilePath '${executable.replace(/'/g, "''")}' -ArgumentList @(${quotedArgs}) -Verb RunAs`
