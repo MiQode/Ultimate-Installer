@@ -11,6 +11,7 @@ export default function Sidebar({
     <aside className="w-60 shrink-0 border-r border-slate-800 bg-slate-900/60 flex flex-col">
       <div className="px-5 py-5 border-b border-slate-800">
         <div className="flex items-center gap-3">
+
           <AppLogo className="h-10 w-10 rounded-xl" />
           <div>
             <p className="text-sm font-semibold text-slate-100 leading-tight">
@@ -29,19 +30,17 @@ export default function Sidebar({
               key={name}
               type="button"
               onClick={() => onCategoryChange(name)}
-              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${
-                active
+              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors ${active
                   ? "bg-sky-500/15 text-sky-300"
                   : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200"
-              }`}
+                }`}
             >
               <span>{name}</span>
               <span
-                className={`rounded-full px-2 py-0.5 text-xs ${
-                  active
+                className={`rounded-full px-2 py-0.5 text-xs ${active
                     ? "bg-sky-500/20 text-sky-200"
                     : "bg-slate-800 text-slate-500"
-                }`}
+                  }`}
               >
                 {count}
               </span>

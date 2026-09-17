@@ -11,6 +11,13 @@ const { spawn, execFile } = require("node:child_process");
 const DOWNLOAD_DIR = path.join(os.tmpdir(), "ultimate-installer");
 const INSTALLER_EXTENSIONS = [".exe", ".msi", ".bat", ".cmd", ".ps1"];
 
+// Exit codes that mean "user cancelled" rather than "actual failure"
+const CANCELLATION_CODES = new Set([1602, 120, -1, null]);
+
+function isCancelledExit(code) {
+  return CANCELLATION_CODES.has(code);
+}
+
 /**
  * Thin wrapper around the actual install work so the main process can drive it
  * and forward progress to the renderer.
@@ -246,7 +253,7 @@ class Installer {
 
     await this.closeAutoLaunched(app);
 
-    if (this.cancelled || code === 1602) {
+    if (this.cancelled || isCancelledExit(code)) {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0 || code === 3010) {
@@ -330,7 +337,7 @@ class Installer {
     await this.closeAutoLaunched(app);
     await fsp.rm(destination, { force: true }).catch(() => {});
 
-    if (this.cancelled || code === 1602) {
+    if (this.cancelled || isCancelledExit(code)) {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0 || code === 3010) {
@@ -375,7 +382,7 @@ class Installer {
 
     await this.closeAutoLaunched(app);
 
-    if (this.cancelled || code === 1602) {
+    if (this.cancelled || isCancelledExit(code)) {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0) {
