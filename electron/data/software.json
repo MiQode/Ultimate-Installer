@@ -60,7 +60,13 @@
     "iconFile": "app-icons/brave.png",
     "size": "~150 MB",
     "url": null,
-    "silentArgs": [],
+    "silentArgs": [
+      "/silent",
+      "/install",
+      "--do-not-launch-chrome",
+      "--no-default-browser-check",
+      "--no-first-run"
+    ],
     "wingetId": "Brave.Brave",
     "localFile": "brave.exe",
     "detect": [
@@ -122,9 +128,13 @@
     "category": "Media",
     "description": "Music and podcast streaming client.",
     "icon": "🎵",
-    "size": "~130 MB",
+    "iconFile": "app-icons/spotify.png",
+    "size": "~5 MB",
     "url": null,
-    "silentArgs": [],
+    "localFile": "spotify-1.2.93.667.exe",
+    "silentArgs": [
+      "/silent"
+    ],
     "wingetId": "Spotify.Spotify",
     "detect": [
       "Spotify"
@@ -226,10 +236,19 @@
     "default": true,
     "size": "~4 MB",
     "url": null,
-    "silentArgs": [],
+    "silentArgs": [
+      "-s"
+    ],
     "wingetId": "RARLab.WinRAR",
+    "localFile": "winrar-x64-723.exe",
     "detect": [
       "WinRAR"
+    ],
+    "postInstall": [
+      {
+        "from": "rarreg.key",
+        "to": "C:\\Program Files\\WinRAR"
+      }
     ]
   },
   {
@@ -256,15 +275,41 @@
     "category": "Utilities",
     "description": "Instant file and folder search for Windows.",
     "icon": "🔍",
-    "size": "~2 MB",
+    "iconFile": "app-icons/everything.png",
+    "size": "~4 MB",
     "url": null,
-    "silentArgs": [],
+    "silentArgs": [
+      "/S"
+    ],
     "wingetId": "voidtools.Everything",
+    "localFile": "everything-1.4.1.1032.exe",
     "detect": [
       "Everything"
     ],
     "killAfter": [
       "Everything.exe"
+    ]
+  },
+  {
+    "id": "hdsentinel",
+    "name": "Hard Disk Sentinel",
+    "publisher": "Janos Mathe",
+    "category": "Utilities",
+    "description": "Hard Disk and SSD Health monitoring software",
+    "icon": "🔍",
+    "iconFile": "app-icons/hdsentinel.png",
+    "size": "~4 MB",
+    "url": null,
+    "silentArgs": [
+      "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /SERVICE"
+    ],
+    "wingetId": "JanosMathe.HardDiskSentinel.Professional",
+    "localFile": "hdsentinel_4.20.exe",
+    "detect": [
+      "Hard Disk Sentinel"
+    ],
+    "killAfter": [
+      "HDSentinel.exe"
     ]
   },
   {
@@ -283,6 +328,72 @@
     ],
     "killAfter": [
       "PowerToys.exe"
+    ]
+  },
+  {
+    "id": "ccleaner",
+    "name": "CCleaner",
+    "publisher": "Piriform",
+    "category": "Utilities",
+    "description": "System cleaning and optimization tool.",
+    "icon": "🧰",
+    "iconFile": "app-icons/ccleaner.png",
+    "size": "~2 MB",
+    "url": null,
+    "silentArgs": [
+      "/S"
+    ],
+    "wingetId": "Piriform.CCleaner",
+    "localFile": "ccleaner.exe",
+    "detect": [
+      "CCleaner"
+    ],
+    "killAfter": [
+      "CCleaner.exe"
+    ]
+  },
+  {
+    "id": "rufus",
+    "name": "Rufus",
+    "publisher": "Akeo Consulting",
+    "category": "Utilities",
+    "description": "Create bootable USB drives the easy way.",
+    "icon": "🧰",
+    "iconFile": "app-icons/rufus.png",
+    "size": "~2 MB",
+    "url": null,
+    "silentArgs": [
+      "/S"
+    ],
+    "wingetId": "AkeoConsulting.Rufus",
+    "localFile": "rufus-4.15.exe",
+    "detect": [
+      "Rufus"
+    ],
+    "killAfter": [
+      "rufus.exe"
+    ]
+  },
+  {
+    "id": "wordweb",
+    "name": "WordWeb Dictionary",
+    "publisher": "Pragmatic Software",
+    "category": "Utilities",
+    "description": "English dictionary and thesaurus for Windows.",
+    "icon": "🧰",
+    "iconFile": "app-icons/wordweb.png",
+    "size": "~28 MB",
+    "url": null,
+    "silentArgs": [
+      "-s1"
+    ],
+    "wingetId": "PragmaticSoftware.WordWebDictionary",
+    "localFile": "wordweb10.exe",
+    "detect": [
+      "WordWeb"
+    ],
+    "killAfter": [
+      "WordWeb.exe"
     ]
   },
   {

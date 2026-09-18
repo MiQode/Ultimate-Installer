@@ -69,6 +69,7 @@ export default function App() {
     });
 
     const offDone = bridge.onItemDone((item) => {
+      setResults((prev) => [...prev, item]);
       setStatuses((prev) => ({ ...prev, [item.id]: item.status }));
     });
 

@@ -257,6 +257,7 @@ class Installer {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0 || code === 3010) {
+      await this.runPostInstall(app);
       return {
         id: app.id,
         name: app.name,
@@ -312,6 +313,50 @@ class Installer {
     );
   }
 
+  /**
+   * Copies files after installation completes. Useful for license keys, config
+   * files, or patches that go into the installed directory.
+   *
+   * `app.postInstall` is an array of { from, to } objects:
+   *   - from: source file relative to the offline repo (installers/) or absolute
+   *   - to:   destination directory or full file path on the target machine
+   *
+   * Example (WinRAR license):
+   *   "postInstall": [{ "from": "rarreg.key", "to": "C:\\Program Files\\WinRAR" }]
+   */
+  async runPostInstall(app) {
+    const steps = app.postInstall;
+    if (!Array.isArray(steps) || steps.length === 0) return;
+
+    for (const step of steps) {
+      if (this.cancelled) return;
+
+      const fromPath = path.isAbsolute(step.from)
+        ? step.from
+        : path.join(this.localRepo || "", step.from);
+
+      if (!fs.existsSync(fromPath)) {
+        console.warn(`postInstall: source not found: ${fromPath}`);
+        continue;
+      }
+
+      const destStat = fs.existsSync(step.to) && fs.statSync(step.to);
+      let destPath;
+      if (destStat && destStat.isDirectory()) {
+        destPath = path.join(step.to, path.basename(fromPath));
+      } else {
+        destPath = step.to;
+      }
+
+      const destDir = path.dirname(destPath);
+      if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+      }
+
+      fs.copyFileSync(fromPath, destPath);
+    }
+  }
+
   async installFromUrl(app, report) {
     await fsp.mkdir(DOWNLOAD_DIR, { recursive: true });
     const destination = path.join(DOWNLOAD_DIR, `${app.id}-${Date.now()}.exe`);
@@ -341,6 +386,7 @@ class Installer {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0 || code === 3010) {
+      await this.runPostInstall(app);
       return {
         id: app.id,
         name: app.name,
@@ -386,6 +432,7 @@ class Installer {
       return { id: app.id, name: app.name, status: "cancelled" };
     }
     if (code === 0) {
+      await this.runPostInstall(app);
       return { id: app.id, name: app.name, status: "installed", source: "winget" };
     }
     if (code === -1978335189) {
@@ -455,9 +502,10 @@ class Installer {
     return new Promise((resolve, reject) => {
       let child;
       try {
+        const env = { ...process.env, __COMPAT_LAYER: "RunAsInvoker" };
         child = isExecutable
-          ? spawn(command, args, { windowsHide: true })
-          : spawn(command, args, { windowsHide: true, shell: false });
+          ? spawn(command, args, { windowsHide: true, env })
+          : spawn(command, args, { windowsHide: true, shell: false, env });
       } catch (error) {
         return reject(error);
       }
